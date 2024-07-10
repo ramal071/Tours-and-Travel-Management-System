@@ -28,13 +28,13 @@ if(isset($_POST['submit'])) {
     if(password_verify($password, $fetch['mypassword'])) {
      
       $_SESSION['username']= $fetch['username'];
-      $_SESSION['id']= $fetch['id'];
+      $_SESSION['user_id']= $fetch['id'];
 
       header("location:".APPURL."");
 
-    } else {
-      echo"<script>alert('password!!!');</script>";
-    }
+      } else {
+        echo"<script>alert('password!!!');</script>";
+      }
     } else {
       echo"<script>alert('password!!!');</script>";
     }
@@ -42,6 +42,7 @@ if(isset($_POST['submit'])) {
 }
 
 ?>
+
   <div class="reservation-form">
     <div class="container">
       <div class="row">

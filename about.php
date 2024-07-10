@@ -43,6 +43,8 @@ if (isset($_GET['id'])) {
 
     $num_town->execute();
     $num_bookings = $num_town->fetch(PDO::FETCH_OBJ);
+} else {
+  header("location: 404.php");
 }
 ?>
   <!-- ***** Main Banner Area Start ***** -->
@@ -126,9 +128,13 @@ if (isset($_GET['id'])) {
                     <li><i class="fa fa-plane"></i> Airplane Bill Included</li>
                     <li><i class="fa fa-building"></i> Daily Places Visit</li>
                   </ul>
+                  <?php if(isset($_SESSION['username'])) :?>
                   <div class="main-button">
                     <a href="reservation.php?id=<?php echo $c->id; ?>">Make a Reservation</a>
                   </div>
+                  <?php else : ?>
+                    <p>Log in plase for reserve !</p>
+                  <?php endif ?>
                 </div>
               </div>
             </div>

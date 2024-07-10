@@ -1,6 +1,6 @@
 <?php
-session_start();
-define("APPURL", "http://localhost/udemy/ceylon_travel/");
+  session_start();
+  define("APPURL", "http://localhost/udemy/ceylon_travel/");
 ?>
 
 <!DOCTYPE html>
@@ -56,14 +56,14 @@ https://templatemo.com/tm-580-woox-travel
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
-                        <img src="assets/images/logo.png" alt="">
+                    <a href="<?php echo APPURL; ?>" class="logo">
+                        <!-- <img src="<?php echo APPURL; ?>/assets/images/logo.png" alt=""> -->
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html" class="active">Home</a></li>
-                        <li><a href="deals.html">Deals</a></li>
+                        <li><a href="<?php echo APPURL; ?>" class="active">Home</a></li>
+                        <li><a href="<?php echo APPURL; ?>/deals.php">Deals</a></li>
 
                         <!-- user manu -->
                           <!-- check login session start ? -->
@@ -73,7 +73,7 @@ https://templatemo.com/tm-580-woox-travel
                             <?php echo $_SESSION['username'];?>
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item text-black" href="#">Action</a></li>
+                            <li><a class="dropdown-item text-black" href="<?php echo APPURL; ?>/users/user.php?id=<?php echo $_SESSION['user_id']; ?>">Your Booking</a></li>
                             <li><a class="dropdown-item text-black" href="#">Another action</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <!-- only login uses can view logout -->

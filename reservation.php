@@ -2,6 +2,10 @@
 require "includes/header.php"; 
 require "config/config.php"; 
 
+if(!isset($_SESSION["username"])) {
+  header("location: ".APPURL."");
+}
+
 if(isset($_GET['id'])) {
 
   $id = $_GET['id'];
@@ -33,30 +37,82 @@ if(isset($_GET['id'])) {
       $status = "Pending";
       $city_id = $id;
 
-      $insert = $conn->prepare("INSERT INTO bookings (name, phone_number, number_of_guests,
-      checkin_date, destination, status, city_id, user_id, created_at)
-      VALUES (:name, :phone_number, :number_of_guests, :checkin_date, :destination, :status,
-      :city_id, :user_id, NOW())");
+      $payment = $number_of_guests * $getCity->price;
 
-      $insert->execute([
-        ":name" => $name,
-        ":phone_number" => $phone_number,
-        ":number_of_guests" => $number_of_guests,
-        ":checkin_date" => $checkin_date,
-        ":destination" => $destination,
-        ":status" => $status,
-        ":city_id" => $city_id,
-        ":user_id" => $user_id,
-      ]);
+      if(date("Y-m-d") < $checkin_date) {
+        $insert = $conn->prepare("INSERT INTO bookings (name, phone_number, number_of_guests,
+        checkin_date, destination, status, city_id, user_id, payment, created_at)
+        VALUES (:name, :phone_number, :number_of_guests, :checkin_date, :destination, :status,
+        :city_id, :user_id, :payment, NOW())");
 
-      echo "<script>alert('Reservation made successfully');</script>";
+        $insert->execute([
+          ":name" => $name,
+          ":phone_number" => $phone_number,
+          ":number_of_guests" => $number_of_guests,
+          ":checkin_date" => $checkin_date,
+          ":destination" => $destination,
+          ":status" => $status,
+          ":city_id" => $city_id,
+          ":user_id" => $user_id,
+          ":payment" => $payment,
+        ]);
+
+        header("location: pay.php");
+
+        $_SESSION['payment']=$payment;
+
+        echo "<script>alert('Reservation made successfully');</script>";
+      }else {
+          echo "<script>alert('invalid date, pick starting from tomorrow');</script>";
+
+      }
     }
   }
+
 } else {
-  echo "<script>alert('No city ID provided');</script>";
-  exit();
+  header("location: 404.php");
 }
 ?>
+
+<div class="second-page-heading">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h4>Book Prefered Deal Here</h4>
+          <h2>Make Your Reservation</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt uttersi labore et dolore magna aliqua is ipsum suspendisse ultrices gravida</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="more-info reservation-info">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-sm-6">
+          <div class="info-item">
+            <i class="fa fa-phone"></i>
+            <h4>Make a Phone Call</h4>
+            <a href="#">+123 456 789 (0)</a>
+          </div>
+        </div>
+        <div class="col-lg-4 col-sm-6">
+          <div class="info-item">
+            <i class="fa fa-envelope"></i>
+            <h4>Contact Us via Email</h4>
+            <a href="#">company@email.com</a>
+          </div>
+        </div>
+        <div class="col-lg-4 col-sm-6">
+          <div class="info-item">
+            <i class="fa fa-map-marker"></i>
+            <h4>Visit Our Offices</h4>
+            <a href="#">24th Street North Avenue London, UK</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Your HTML form code -->
 <div class="reservation-form">
@@ -71,13 +127,13 @@ if(isset($_GET['id'])) {
             <div class="col-lg-6">
               <fieldset>
                 <label for="Name" class="form-label">Your Name</label>
-                <input type="text" name="name" class="Name" placeholder="Ex. John Smithee" autocomplete="on" required>
+                <input type="text" name="name" class="Name" placeholder="Ex. John Smithee" autocomplete="on">
               </fieldset>
             </div>
             <div class="col-lg-6">
               <fieldset>
                 <label for="Number" class="form-label">Your Phone Number</label>
-                <input type="text" name="phone_number" class="Number" placeholder="Ex. +xxx xxx xxx" autocomplete="on" required>
+                <input type="text" name="phone_number" class="Number" placeholder="Ex. +xxx xxx xxx" autocomplete="on">
               </fieldset>
             </div>
             <div class="col-lg-6">
@@ -95,7 +151,7 @@ if(isset($_GET['id'])) {
             <div class="col-lg-6">
               <fieldset>
                 <label for="Number" class="form-label">Check In Date</label>
-                <input type="date" name="checkin_date" class="date" required>
+                <input type="date" name="checkin_date" class="date">
               </fieldset>
             </div>
             <!-- Hidden field to store destination -->
